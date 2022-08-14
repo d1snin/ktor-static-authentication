@@ -58,7 +58,8 @@ public class StaticAuthenticationProvider(config: Config) : AuthenticationProvid
             call.respond(
                 UnauthorizedResponse(
                     HttpAuthHeader.Parameterized(
-                        STATIC_AUTHORIZATION_SCHEME, mapOf(HttpAuthHeader.Parameters.Realm to requireNotNull(configuredRealm))
+                        STATIC_AUTHORIZATION_SCHEME,
+                        mapOf(HttpAuthHeader.Parameters.Realm to requireNotNull(configuredRealm))
                     )
                 )
             )
@@ -79,7 +80,7 @@ public class StaticAuthenticationProvider(config: Config) : AuthenticationProvid
 }
 
 public fun AuthenticationConfig.static(
-    name: String? = null, configure: StaticAuthenticationProvider.Config.() -> Unit
+    name: String? = null, configure: StaticAuthenticationProvider.Config.() -> Unit = {}
 ) {
     register(
         StaticAuthenticationProvider(
