@@ -37,7 +37,15 @@ dependencies {
     implementation("io.ktor:ktor-server-auth-jvm:$ktorVersion")
 }
 
-tasks.withType<KotlinCompile>() {
+publishing {
+    publications {
+        create<MavenPublication>("ktor-static-authentication") {
+            from(components["java"])
+        }
+    }
+}
+
+tasks.withType<KotlinCompile> {
     kotlinOptions {
         jvmTarget = "11"
     }
@@ -46,3 +54,4 @@ tasks.withType<KotlinCompile>() {
 kotlin {
     explicitApi()
 }
+

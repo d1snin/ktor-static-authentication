@@ -1,4 +1,4 @@
 install:
   - echo "Building and publishing"
   - chmod +x ./gradlew
-  - ./gradlew build publishToMavenLocal
+  - ./gradlew publishToMavenLocal
