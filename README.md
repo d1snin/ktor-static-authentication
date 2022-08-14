@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/dev.d1s/ktor-static-authentication.svg)](https://jitpack.io/#dev.d1s/ktor-static-authentication)
+
 ### Static authentication for Ktor
 
 This library provides `StaticAuthenticationProvider` for Ktor that can be used to authenticate requests using
