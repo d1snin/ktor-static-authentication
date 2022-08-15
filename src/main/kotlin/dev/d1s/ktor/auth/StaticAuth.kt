@@ -39,12 +39,14 @@ public class StaticAuthenticationProvider(private val config: Config) : Authenti
     override suspend fun onAuthenticate(context: AuthenticationContext) {
         val appConfig = context.call.application.environment.config
 
-        when {
-            !::configuredToken.isInitialized -> configuredToken = config.token ?: appConfig.property(
+        if (!::configuredToken.isInitialized) {
+            configuredToken = config.token ?: appConfig.property(
                 STATIC_AUTHORIZATION_TOKEN_PROPERTY
             ).getString()
+        }
 
-            !::configuredRealm.isInitialized -> configuredRealm = config.realm ?: appConfig.propertyOrNull(
+        if (!::configuredRealm.isInitialized) {
+            configuredRealm = config.realm ?: appConfig.propertyOrNull(
                 STATIC_AUTHORIZATION_REALM_PROPERTY
             )?.getString() ?: DEFAULT_STATIC_AUTHORIZATION_REALM
         }
