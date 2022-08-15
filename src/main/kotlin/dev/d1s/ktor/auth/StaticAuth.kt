@@ -30,19 +30,23 @@ private const val STATIC_AUTHORIZATION_TOKEN_PROPERTY = "static-auth.token"
 private const val STATIC_AUTHORIZATION_REALM_PROPERTY = "static-auth.realm"
 private const val DEFAULT_STATIC_AUTHORIZATION_REALM = "Ktor Server"
 
-public class StaticAuthenticationProvider(config: Config) : AuthenticationProvider(config) {
+public class StaticAuthenticationProvider(private val config: Config) : AuthenticationProvider(config) {
 
-    private var configuredToken = config.token
+    private lateinit var configuredToken: String
 
-    private var configuredRealm = config.realm
+    private lateinit var configuredRealm: String
 
     override suspend fun onAuthenticate(context: AuthenticationContext) {
-        val config = context.call.application.environment.config
+        val appConfig = context.call.application.environment.config
 
-        when (null) {
-            configuredToken -> configuredToken = config.property(STATIC_AUTHORIZATION_TOKEN_PROPERTY).getString()
-            configuredRealm -> configuredRealm = config.propertyOrNull(STATIC_AUTHORIZATION_REALM_PROPERTY)?.getString()
-                ?: DEFAULT_STATIC_AUTHORIZATION_REALM
+        when {
+            !::configuredToken.isInitialized -> configuredToken = config.token ?: appConfig.property(
+                STATIC_AUTHORIZATION_TOKEN_PROPERTY
+            ).getString()
+
+            !::configuredRealm.isInitialized -> configuredRealm = config.realm ?: appConfig.propertyOrNull(
+                STATIC_AUTHORIZATION_REALM_PROPERTY
+            )?.getString() ?: DEFAULT_STATIC_AUTHORIZATION_REALM
         }
 
         context.call.parseToken()?.let { parsedToken ->
@@ -58,8 +62,7 @@ public class StaticAuthenticationProvider(config: Config) : AuthenticationProvid
             call.respond(
                 UnauthorizedResponse(
                     HttpAuthHeader.Parameterized(
-                        STATIC_AUTHORIZATION_SCHEME,
-                        mapOf(HttpAuthHeader.Parameters.Realm to requireNotNull(configuredRealm))
+                        STATIC_AUTHORIZATION_SCHEME, mapOf(HttpAuthHeader.Parameters.Realm to configuredRealm)
                     )
                 )
             )
