@@ -23,48 +23,33 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 
-private const val STATIC_AUTHORIZATION_SCHEME = "Static"
-private const val STATIC_AUTHORIZATION_PREFIX = "$STATIC_AUTHORIZATION_SCHEME "
-private const val STATIC_AUTHORIZATION_CHALLENGE_KEY = "StaticAuth"
-private const val STATIC_AUTHORIZATION_TOKEN_PROPERTY = "static-auth.token"
-private const val STATIC_AUTHORIZATION_REALM_PROPERTY = "static-auth.realm"
-private const val DEFAULT_STATIC_AUTHORIZATION_REALM = "Ktor Server"
+private const val STATIC_AUTHENTICATION_SCHEME = "Static"
+private const val STATIC_AUTHENTICATION_PREFIX = "$STATIC_AUTHENTICATION_SCHEME "
+private const val STATIC_AUTHENTICATION_CHALLENGE_KEY = "StaticAuth"
+private const val STATIC_AUTHENTICATION_TOKEN_PROPERTY = "static-auth.token"
+private const val STATIC_AUTHENTICATION_REALM_PROPERTY = "static-auth.realm"
+private const val DEFAULT_STATIC_AUTHENTICATION_REALM = "Ktor Server"
 
 public class StaticAuthenticationProvider(private val config: Config) : AuthenticationProvider(config) {
 
-    private lateinit var configuredToken: String
-
-    private lateinit var configuredRealm: String
-
     override suspend fun onAuthenticate(context: AuthenticationContext) {
-        val appConfig = context.call.application.environment.config
-
-        if (!::configuredToken.isInitialized) {
-            configuredToken = config.token ?: appConfig.property(
-                STATIC_AUTHORIZATION_TOKEN_PROPERTY
-            ).getString()
-        }
-
-        if (!::configuredRealm.isInitialized) {
-            configuredRealm = config.realm ?: appConfig.propertyOrNull(
-                STATIC_AUTHORIZATION_REALM_PROPERTY
-            )?.getString() ?: DEFAULT_STATIC_AUTHORIZATION_REALM
-        }
+        config.authenticationContext = context
 
         context.call.parseToken()?.let { parsedToken ->
-            if (parsedToken == configuredToken) {
+            if (parsedToken == requireNotNull(config.token)) {
                 context.principal(object : Principal {})
                 return
             }
         }
 
         context.challenge(
-            STATIC_AUTHORIZATION_CHALLENGE_KEY, AuthenticationFailedCause.InvalidCredentials
+            STATIC_AUTHENTICATION_CHALLENGE_KEY, AuthenticationFailedCause.InvalidCredentials
         ) { challenge, call ->
             call.respond(
                 UnauthorizedResponse(
                     HttpAuthHeader.Parameterized(
-                        STATIC_AUTHORIZATION_SCHEME, mapOf(HttpAuthHeader.Parameters.Realm to configuredRealm)
+                        STATIC_AUTHENTICATION_SCHEME,
+                        mapOf(HttpAuthHeader.Parameters.Realm to requireNotNull(config.realm))
                     )
                 )
             )
@@ -74,13 +59,22 @@ public class StaticAuthenticationProvider(private val config: Config) : Authenti
     }
 
     private fun ApplicationCall.parseToken() =
-        this.request.header(HttpHeaders.Authorization)?.removePrefix(STATIC_AUTHORIZATION_PREFIX)
+        this.request.header(HttpHeaders.Authorization)?.removePrefix(STATIC_AUTHENTICATION_PREFIX)
 
     public class Config internal constructor(name: String?) : AuthenticationProvider.Config(name) {
 
+        internal lateinit var authenticationContext: AuthenticationContext
+
+        private val config by lazy {
+            authenticationContext.call.application.environment.config
+        }
+
         public var token: String? = null
+            get() = field ?: config.property(STATIC_AUTHENTICATION_TOKEN_PROPERTY).getString()
 
         public var realm: String? = null
+            get() = field ?: config.propertyOrNull(STATIC_AUTHENTICATION_REALM_PROPERTY)?.getString()
+            ?: DEFAULT_STATIC_AUTHENTICATION_REALM
     }
 }
 
