@@ -25,7 +25,7 @@ plugins {
 }
 
 group = "dev.d1s"
-version = "1.0.6"
+version = "1.0.7"
 
 java.sourceCompatibility = JavaVersion.VERSION_11
 
