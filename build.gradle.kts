@@ -34,7 +34,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.ktor:ktor-server-auth-jvm:$ktorVersion")
+    api("io.ktor:ktor-server-auth-jvm:$ktorVersion")
 }
 
 publishing {
