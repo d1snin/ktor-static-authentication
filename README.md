@@ -35,6 +35,10 @@ fun Application.configureSecurity() {
 }
 ```
 
+### How to contribute
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md)
+
 ### License
 
 ```
