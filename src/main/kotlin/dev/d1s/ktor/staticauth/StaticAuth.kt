@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.d1s.ktor.auth
+package dev.d1s.ktor.staticauth
 
 import io.ktor.http.*
 import io.ktor.http.auth.*
@@ -30,6 +30,9 @@ private const val STATIC_AUTHENTICATION_TOKEN_PROPERTY = "static-auth.token"
 private const val STATIC_AUTHENTICATION_REALM_PROPERTY = "static-auth.realm"
 private const val DEFAULT_STATIC_AUTHENTICATION_REALM = "Ktor Server"
 
+/**
+ * [AuthenticationProvider] that provides Static authorization support.
+ */
 public class StaticAuthenticationProvider(private val config: Config) : AuthenticationProvider(config) {
 
     override suspend fun onAuthenticate(context: AuthenticationContext) {
@@ -61,6 +64,9 @@ public class StaticAuthenticationProvider(private val config: Config) : Authenti
     private fun ApplicationCall.parseToken() =
         this.request.header(HttpHeaders.Authorization)?.removePrefix(STATIC_AUTHENTICATION_PREFIX)
 
+    /**
+     * [StaticAuthenticationProvider] configuration.
+     */
     public class Config internal constructor(name: String?) : AuthenticationProvider.Config(name) {
 
         internal lateinit var authenticationContext: AuthenticationContext
@@ -78,6 +84,11 @@ public class StaticAuthenticationProvider(private val config: Config) : Authenti
     }
 }
 
+/**
+ * Registers [StaticAuthenticationProvider] with optional name.
+ *
+ * @param name optional name to use.
+ */
 public fun AuthenticationConfig.static(
     name: String? = null, configure: StaticAuthenticationProvider.Config.() -> Unit = {}
 ) {

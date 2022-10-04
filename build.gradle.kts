@@ -15,10 +15,12 @@
  */
 
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
     id("java-library")
     id("maven-publish")
+    id("org.jetbrains.dokka")
     kotlin("jvm")
 }
 
@@ -51,6 +53,16 @@ publishing {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         jvmTarget = "11"
+    }
+}
+
+tasks.withType<DokkaTask> {
+    dokkaSourceSets {
+        configureEach {
+            val moduleDocsPath: String by project
+
+            includes.setFrom(moduleDocsPath)
+        }
     }
 }
 
