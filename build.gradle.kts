@@ -16,16 +16,17 @@
 
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val ktorVersion: String by project
-
 plugins {
     id("java-library")
     id("maven-publish")
-    kotlin("jvm") version "1.7.10"
+    kotlin("jvm")
 }
 
-group = "dev.d1s"
-version = "1.0.7"
+val projectGroup: String by project
+val projectVersion: String by project
+
+group = projectGroup
+version = projectVersion
 
 java.sourceCompatibility = JavaVersion.VERSION_11
 
@@ -34,12 +35,14 @@ repositories {
 }
 
 dependencies {
+    val ktorVersion: String by project
+
     api("io.ktor:ktor-server-auth-jvm:$ktorVersion")
 }
 
 publishing {
     publications {
-        create<MavenPublication>("ktor-static-authentication") {
+        create<MavenPublication>(project.name) {
             from(components["java"])
         }
     }

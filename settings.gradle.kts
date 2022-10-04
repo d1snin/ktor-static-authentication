@@ -15,3 +15,11 @@
  */
 
 rootProject.name = "ktor-static-authentication"
+
+pluginManagement {
+    plugins {
+        val kotlinVersion: String by settings
+
+        kotlin("jvm") version kotlinVersion
+    }
+}
