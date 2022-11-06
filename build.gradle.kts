@@ -39,7 +39,7 @@ repositories {
 dependencies {
     val ktorVersion: String by project
 
-    api("io.ktor:ktor-server:$ktorVersion")
+    api("io.ktor:ktor-server-auth:$ktorVersion")
 }
 
 publishing {
