@@ -30,7 +30,7 @@ val projectVersion: String by project
 group = projectGroup
 version = projectVersion
 
-java.sourceCompatibility = JavaVersion.VERSION_11
+java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
@@ -39,7 +39,7 @@ repositories {
 dependencies {
     val ktorVersion: String by project
 
-    api("io.ktor:ktor-server-auth-jvm:$ktorVersion")
+    api("io.ktor:ktor-server:$ktorVersion")
 }
 
 publishing {
@@ -52,7 +52,7 @@ publishing {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = JavaVersion.VERSION_17.majorVersion
     }
 }
 
