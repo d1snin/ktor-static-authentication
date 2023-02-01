@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import org.jetbrains.dokka.base.DokkaBase
+import org.jetbrains.dokka.base.DokkaBaseConfiguration
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.util.capitalizeDecapitalize.toLowerCaseAsciiOnly
@@ -24,6 +26,14 @@ plugins {
     id("maven-publish")
     id("org.jetbrains.dokka")
     id("com.github.ben-manes.versions")
+}
+
+buildscript {
+    dependencies {
+        val dokkaVersion: String by project
+
+        classpath("org.jetbrains.dokka:dokka-base:$dokkaVersion")
+    }
 }
 
 val projectGroup: String by project
@@ -82,6 +92,10 @@ tasks.withType<DokkaTask> {
 
             includes.setFrom(moduleDocsPath)
         }
+    }
+
+    pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
+        footerMessage = "Copyright (c) 2022-2023 Mikhail Titov"
     }
 }
 
