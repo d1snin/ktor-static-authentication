@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.util.capitalizeDecapitalize.toLowerCaseAsciiOnly
 
 plugins {
@@ -52,8 +52,8 @@ publishing {
                 url = uri("https://maven.d1s.dev/${channel.toLowerCaseAsciiOnly()}")
 
                 credentials {
-                    username = getEnvOrProperty("MAVEN_D1S_DEV_USERNAME", "mavenD1sDevUsername")
-                    password = getEnvOrProperty("MAVEN_D1S_DEV_PASSWORD", "mavenD1sDevPassword")
+                    username = System.getenv("MAVEN_D1S_DEV_USERNAME")
+                    password = System.getenv("MAVEN_D1S_DEV_PASSWORD")
                 }
             }
         }
@@ -88,6 +88,3 @@ tasks.withType<DokkaTask> {
 kotlin {
     explicitApi()
 }
-
-fun getEnvOrProperty(env: String, property: String): String? =
-    System.getenv(env) ?: findProperty(property)?.toString()
