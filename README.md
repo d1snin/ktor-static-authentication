@@ -1,4 +1,4 @@
-[![](https://jitpack.io/v/dev.d1s/ktor-static-authentication.svg)](https://jitpack.io/#dev.d1s/ktor-static-authentication)
+[![https://maven.d1s.dev/api/badge/latest/releases/dev/d1s/ktor-static-authentication?color=40c14a&name=maven.d1s.dev&prefix=v](https://maven.d1s.dev/api/badge/latest/releases/com/reposilite?color=40c14a&name=Reposilite&prefix=v)](https://github.com/d1snin/ktor-static-authentication)
 
 ### Static authentication for Ktor
 
@@ -9,7 +9,7 @@ the `Static` schema and the corresponding static token.
 
 ```kotlin
 repositories {
-    maven(url = "https://jitpack.io")
+    maven(url = "https://maven.d1s.dev/releases")
 }
 
 dependencies {
