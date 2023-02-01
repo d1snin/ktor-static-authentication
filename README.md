@@ -1,4 +1,4 @@
-[![https://maven.d1s.dev/api/badge/latest/releases/dev/d1s/ktor-static-authentication?color=40c14a&name=maven.d1s.dev&prefix=v](https://maven.d1s.dev/api/badge/latest/releases/com/reposilite?color=40c14a&name=Reposilite&prefix=v)](https://github.com/d1snin/ktor-static-authentication)
+[![](https://maven.d1s.dev/api/badge/latest/releases/dev/d1s/ktor-static-authentication?color=40c14a&name=maven.d1s.dev&prefix=v)](https://github.com/d1snin/ktor-static-authentication)
 
 ### Static authentication for Ktor
 
