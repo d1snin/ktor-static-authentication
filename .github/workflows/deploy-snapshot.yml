@@ -20,8 +20,8 @@ jobs:
 
       - name: Deploy to maven.d1s.dev (snapshots)
         env:
-          MAVEN_D1S_DEV_PASSWORD: ${{ secrets.MAVEN_D1S_DEV_PASSWORD }}
           MAVEN_D1S_DEV_USERNAME: ${{ secrets.MAVEN_D1S_DEV_USERNAME }}
+          MAVEN_D1S_DEV_PASSWORD: ${{ secrets.MAVEN_D1S_DEV_PASSWORD }}
         run: ./gradlew publishAllPublicationsToMavenD1sDevRepositorySnapshotsRepository
 
       - name: Upload artifacts
