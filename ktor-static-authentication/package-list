@@ -1,0 +1,12 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+$dokka.location:dev.d1s.ktor.staticauth////PointingToDeclaration/ktor-static-authentication/dev.d1s.ktor.staticauth/index.html
+$dokka.location:dev.d1s.ktor.staticauth//static/io.ktor.server.auth.AuthenticationConfig#kotlin.String?#kotlin.Function1[dev.d1s.ktor.staticauth.StaticAuthenticationProvider.Config,kotlin.Unit]/PointingToDeclaration/ktor-static-authentication/dev.d1s.ktor.staticauth/static.html
+$dokka.location:dev.d1s.ktor.staticauth/StaticAuthenticationProvider.Config///PointingToDeclaration/ktor-static-authentication/dev.d1s.ktor.staticauth/-static-authentication-provider/-config/index.html
+$dokka.location:dev.d1s.ktor.staticauth/StaticAuthenticationProvider.Config/realm/#/PointingToDeclaration/ktor-static-authentication/dev.d1s.ktor.staticauth/-static-authentication-provider/-config/realm.html
+$dokka.location:dev.d1s.ktor.staticauth/StaticAuthenticationProvider.Config/token/#/PointingToDeclaration/ktor-static-authentication/dev.d1s.ktor.staticauth/-static-authentication-provider/-config/token.html
+$dokka.location:dev.d1s.ktor.staticauth/StaticAuthenticationProvider///PointingToDeclaration/ktor-static-authentication/dev.d1s.ktor.staticauth/-static-authentication-provider/index.html
+$dokka.location:dev.d1s.ktor.staticauth/StaticAuthenticationProvider/StaticAuthenticationProvider/#dev.d1s.ktor.staticauth.StaticAuthenticationProvider.Config/PointingToDeclaration/ktor-static-authentication/dev.d1s.ktor.staticauth/-static-authentication-provider/-static-authentication-provider.html
+$dokka.location:dev.d1s.ktor.staticauth/StaticAuthenticationProvider/onAuthenticate/#io.ktor.server.auth.AuthenticationContext/PointingToDeclaration/ktor-static-authentication/dev.d1s.ktor.staticauth/-static-authentication-provider/on-authenticate.html
+dev.d1s.ktor.staticauth
+
