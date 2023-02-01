@@ -16,6 +16,7 @@
 
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.kotlin.util.capitalizeDecapitalize.toLowerCaseAsciiOnly
 
 plugins {
     kotlin("jvm")
@@ -44,8 +45,25 @@ dependencies {
 }
 
 publishing {
+    repositories {
+        fun mavenD1sDev(channel: String) {
+            maven {
+                name = "mavenD1sDevRepository$channel"
+                url = uri("https://maven.d1s.dev/${channel.toLowerCaseAsciiOnly()}")
+
+                credentials {
+                    username = getEnvOrProperty("MAVEN_D1S_DEV_USERNAME", "mavenD1sDevUsername")
+                    password = getEnvOrProperty("MAVEN_D1S_DEV_PASSWORD", "mavenD1sDevPassword")
+                }
+            }
+        }
+
+        mavenD1sDev("Releases")
+        mavenD1sDev("Snapshots")
+    }
+
     publications {
-        create<MavenPublication>(project.name) {
+        create<MavenPublication>("maven") {
             from(components["java"])
         }
     }
@@ -71,3 +89,5 @@ kotlin {
     explicitApi()
 }
 
+fun getEnvOrProperty(env: String, property: String): String? =
+    System.getenv(env) ?: findProperty(property)?.toString()
