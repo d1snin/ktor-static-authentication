@@ -1,3 +1,5 @@
+name: Deploy to maven.d1s.dev (releases)
+
 on:
   release:
     types:
