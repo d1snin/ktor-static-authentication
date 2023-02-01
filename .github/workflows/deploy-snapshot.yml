@@ -5,6 +5,7 @@ on:
 
 jobs:
   deploy:
+    environment: deployment_environment
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
