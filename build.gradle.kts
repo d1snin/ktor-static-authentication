@@ -56,25 +56,35 @@ dependencies {
 
 publishing {
     repositories {
-        fun mavenD1sDev(channel: String) {
-            maven {
-                name = "mavenD1sDevRepository$channel"
-                url = uri("https://maven.d1s.dev/${channel.toLowerCaseAsciiOnly()}")
+        maven {
+            name = "mavenD1sDevRepository"
 
-                credentials {
-                    username = System.getenv("MAVEN_D1S_DEV_USERNAME")
-                    password = System.getenv("MAVEN_D1S_DEV_PASSWORD")
-                }
+            val channel = if (isDevVersion) {
+                "snapshots"
+            } else {
+                "releases"
+            }
+
+            url = uri("https://maven.d1s.dev/${channel.toLowerCaseAsciiOnly()}")
+
+            credentials {
+                username = System.getenv("MAVEN_D1S_DEV_USERNAME")
+                password = System.getenv("MAVEN_D1S_DEV_PASSWORD")
             }
         }
-
-        mavenD1sDev("Releases")
-        mavenD1sDev("Snapshots")
     }
 
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
+
+            if (isDevVersion) {
+                val commitShortSha = System.getenv("GIT_SHORT_COMMIT_SHA")
+
+                commitShortSha?.let {
+                    version = "$version-$it"
+                }
+            }
         }
     }
 }
@@ -102,3 +112,5 @@ tasks.withType<DokkaTask> {
 kotlin {
     explicitApi()
 }
+
+val isDevVersion get() = version.toString().endsWith("-dev")
