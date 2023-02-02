@@ -15,9 +15,8 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
           java-version: '17'
-
+          distribution: 'liberica'
           cache: 'gradle'
 
       - name: Deploy to maven.d1s.dev (releases)
