@@ -24,30 +24,40 @@ import io.ktor.server.config.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 
-private const val STATIC_AUTHENTICATION_SCHEME = "Static"
-private const val STATIC_AUTHENTICATION_PREFIX = "$STATIC_AUTHENTICATION_SCHEME "
-private const val STATIC_AUTHENTICATION_CHALLENGE_KEY = "StaticAuth"
-private const val STATIC_AUTHENTICATION_TOKEN_PROPERTY = "static-auth.token"
-private const val STATIC_AUTHENTICATION_REALM_PROPERTY = "static-auth.realm"
+private const val STATIC_AUTHENTICATION_CHALLENGE_KEY = "StaticTokenAuth"
+private const val STATIC_AUTHENTICATION_TOKEN_PROPERTY = "static-token-auth.token"
+private const val STATIC_AUTHENTICATION_REALM_PROPERTY = "static-token-auth.realm"
 private const val DEFAULT_STATIC_AUTHENTICATION_REALM = "Ktor Server"
 
 /**
  * [AuthenticationProvider] that provides Static authorization support.
  */
-public class StaticAuthenticationProvider(private val config: Config) : AuthenticationProvider(config) {
+public class StaticTokenAuthenticationProvider(private val config: Config) : AuthenticationProvider(config) {
 
     override suspend fun onAuthenticate(context: AuthenticationContext) {
-        config.externalConfig = context.call.application.environment.config
+        val result = context.tryAuthenticateCall()
 
-        context.call.parseToken()?.let { parsedToken ->
+        if (result.isFailure) {
+            context.sendChallengeOnFailure()
+        }
+    }
+
+    private fun AuthenticationContext.tryAuthenticateCall() = runCatching {
+        config.externalConfig = call.application.environment.config
+
+        call.parseToken()?.let { parsedToken ->
             if (parsedToken == requireNotNull(config.token)) {
-                context.setPrincipal()
-                return
+                setPrincipal()
+            } else {
+                error("Invalid token provided.")
             }
         }
+    }
 
-        context.challenge(
-            STATIC_AUTHENTICATION_CHALLENGE_KEY, AuthenticationFailedCause.InvalidCredentials
+    private fun AuthenticationContext.sendChallengeOnFailure() {
+        challenge(
+            STATIC_AUTHENTICATION_CHALLENGE_KEY,
+            AuthenticationFailedCause.InvalidCredentials
         ) { challenge, call ->
             val response = newUnauthorizedResponse()
 
@@ -58,11 +68,11 @@ public class StaticAuthenticationProvider(private val config: Config) : Authenti
     }
 
     private fun ApplicationCall.parseToken() =
-        this.request.header(HttpHeaders.Authorization)?.removePrefix(STATIC_AUTHENTICATION_PREFIX)
+        this.request.header(HttpHeaders.Authorization)?.removePrefix("${AuthScheme.Bearer} ")
 
     private fun newUnauthorizedResponse() = UnauthorizedResponse(
         HttpAuthHeader.Parameterized(
-            STATIC_AUTHENTICATION_SCHEME,
+            AuthScheme.Bearer,
             mapOf(HttpAuthHeader.Parameters.Realm to requireNotNull(config.realm))
         )
     )
@@ -74,7 +84,7 @@ public class StaticAuthenticationProvider(private val config: Config) : Authenti
     }
 
     /**
-     * [StaticAuthenticationProvider] configuration.
+     * [StaticTokenAuthenticationProvider] configuration.
      */
     public class Config internal constructor(name: String?) : AuthenticationProvider.Config(name) {
 
@@ -90,16 +100,13 @@ public class StaticAuthenticationProvider(private val config: Config) : Authenti
 }
 
 /**
- * Registers [StaticAuthenticationProvider] with optional name.
- *
- * @param name optional name to use.
+ * Registers [StaticTokenAuthenticationProvider] with optional name.
  */
-public fun AuthenticationConfig.static(
-    name: String? = null, configure: StaticAuthenticationProvider.Config.() -> Unit = {}
+public fun AuthenticationConfig.staticToken(
+    name: String? = null, configure: StaticTokenAuthenticationProvider.Config.() -> Unit = {}
 ) {
-    register(
-        StaticAuthenticationProvider(
-            StaticAuthenticationProvider.Config(name).apply(configure)
-        )
-    )
+    val config = StaticTokenAuthenticationProvider.Config(name).apply(configure)
+    val provider = StaticTokenAuthenticationProvider(config)
+
+    register(provider)
 }

@@ -2,8 +2,9 @@
 
 ### Static authentication for Ktor
 
-This library provides `StaticAuthenticationProvider` for Ktor that can be used to authenticate requests using
-the `Static` schema and the corresponding static token.
+This library provides `StaticTokenAuthenticationProvider` for Ktor that can be used to authenticate requests using
+pre-configured static token.
+Token must be passed within the request headers as follows: `Authorization: Bearer <static_token>`
 
 ### Installation
 
@@ -25,7 +26,7 @@ dependencies {
 fun Application.configureSecurity() {
     authentication {
         // name is optional
-        static(name = "static") {
+        staticToken(name = "static-token") {
             // could be configured through the `static-auth.token` property
             token = "example_token"
             // could be configured through the `static-auth.realm` property. Default realm is "Ktor Server"
