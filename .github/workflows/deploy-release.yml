@@ -6,7 +6,7 @@ on:
       - published
 
 jobs:
-  deploy:
+  deploy_release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
