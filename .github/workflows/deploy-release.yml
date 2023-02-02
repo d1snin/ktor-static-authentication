@@ -23,7 +23,7 @@ jobs:
         env:
           MAVEN_D1S_DEV_USERNAME: ${{ secrets.MAVEN_D1S_DEV_USERNAME }}
           MAVEN_D1S_DEV_PASSWORD: ${{ secrets.MAVEN_D1S_DEV_PASSWORD }}
-        run: ./gradlew publishAllPublicationsToMavenD1sDevRepositoryReleasesRepository
+        run: ./gradlew publishAllPublicationsToMavenD1sDevRepositoryRepository
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
