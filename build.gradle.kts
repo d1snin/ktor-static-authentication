@@ -42,7 +42,10 @@ val projectVersion: String by project
 group = projectGroup
 version = projectVersion
 
-java.sourceCompatibility = JavaVersion.VERSION_17
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 repositories {
     mavenCentral()
