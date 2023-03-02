@@ -91,7 +91,7 @@ public class StaticTokenAuthenticationProvider(private val config: Config) : Aut
 
         public var realm: String = DEFAULT_STATIC_AUTHENTICATION_REALM
 
-        internal val requiredToken = requireNotNull(token) {
+        internal val requiredToken get() = requireNotNull(token) {
             "Token is not set"
         }
 
