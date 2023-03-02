@@ -27,9 +27,7 @@ fun Application.configureSecurity() {
     authentication {
         // name is optional
         staticToken(name = "static-token") {
-            // could be configured through the `static-auth.token` property
             token = "example_token"
-            // could be configured through the `static-auth.realm` property. Default realm is "Ktor Server"
             realm = "example_realm"
         }
     }

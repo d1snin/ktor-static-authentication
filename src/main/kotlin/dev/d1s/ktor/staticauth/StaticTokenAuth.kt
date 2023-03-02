@@ -25,8 +25,9 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 
 private const val STATIC_AUTHENTICATION_CHALLENGE_KEY = "StaticTokenAuth"
-private const val STATIC_AUTHENTICATION_TOKEN_PROPERTY = "static-token-auth.token"
-private const val STATIC_AUTHENTICATION_REALM_PROPERTY = "static-token-auth.realm"
+
+private const val STATIC_AUTHENTICATION_TOKEN_PROPERTY = "static-auth.token"
+private const val STATIC_AUTHENTICATION_REALM_PROPERTY = "static-auth.realm"
 private const val DEFAULT_STATIC_AUTHENTICATION_REALM = "Ktor Server"
 
 /**
@@ -43,10 +44,8 @@ public class StaticTokenAuthenticationProvider(private val config: Config) : Aut
     }
 
     private fun AuthenticationContext.tryAuthenticateCall() = runCatching {
-        config.externalConfig = call.application.environment.config
-
         call.parseToken()?.let { parsedToken ->
-            if (parsedToken == requireNotNull(config.token)) {
+            if (parsedToken == config.requiredToken) {
                 setPrincipal()
             } else {
                 error("Invalid token provided.")
@@ -88,16 +87,29 @@ public class StaticTokenAuthenticationProvider(private val config: Config) : Aut
      */
     public class Config internal constructor(name: String?) : AuthenticationProvider.Config(name) {
 
-        internal lateinit var externalConfig: ApplicationConfig
-
         public var token: String? = null
-            get() = field ?: externalConfig.property(STATIC_AUTHENTICATION_TOKEN_PROPERTY).getString()
 
-        public var realm: String? = null
-            get() = field ?: externalConfig.propertyOrNull(STATIC_AUTHENTICATION_REALM_PROPERTY)?.getString()
-            ?: DEFAULT_STATIC_AUTHENTICATION_REALM
+        public var realm: String = DEFAULT_STATIC_AUTHENTICATION_REALM
+
+        internal val requiredToken = requireNotNull(token) {
+            "Token is not set"
+        }
+
+        internal fun validate() {
+            requiredToken
+        }
     }
 }
+
+/***
+ * Retrieves `static-auth.token` from [ApplicationConfig].
+ */
+public val ApplicationConfig.staticAuthToken: String get() = property(STATIC_AUTHENTICATION_TOKEN_PROPERTY).getString()
+
+/***
+ * Retrieves `static-auth.realm` from [ApplicationConfig].
+ */
+public val ApplicationConfig.staticAuthRealm: String get() = property(STATIC_AUTHENTICATION_REALM_PROPERTY).getString()
 
 /**
  * Registers [StaticTokenAuthenticationProvider] with optional name.
@@ -105,7 +117,10 @@ public class StaticTokenAuthenticationProvider(private val config: Config) : Aut
 public fun AuthenticationConfig.staticToken(
     name: String? = null, configure: StaticTokenAuthenticationProvider.Config.() -> Unit = {}
 ) {
-    val config = StaticTokenAuthenticationProvider.Config(name).apply(configure)
+    val config = StaticTokenAuthenticationProvider.Config(name).apply(configure).apply {
+        validate()
+    }
+
     val provider = StaticTokenAuthenticationProvider(config)
 
     register(provider)
