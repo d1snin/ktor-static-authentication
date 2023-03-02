@@ -1,6 +1,8 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
 $dokka.location:dev.d1s.ktor.staticauth////PointingToDeclaration/ktor-static-authentication/dev.d1s.ktor.staticauth/index.html
+$dokka.location:dev.d1s.ktor.staticauth//staticAuthRealm/io.ktor.server.config.ApplicationConfig#/PointingToDeclaration/ktor-static-authentication/dev.d1s.ktor.staticauth/static-auth-realm.html
+$dokka.location:dev.d1s.ktor.staticauth//staticAuthToken/io.ktor.server.config.ApplicationConfig#/PointingToDeclaration/ktor-static-authentication/dev.d1s.ktor.staticauth/static-auth-token.html
 $dokka.location:dev.d1s.ktor.staticauth//staticToken/io.ktor.server.auth.AuthenticationConfig#kotlin.String?#kotlin.Function1[dev.d1s.ktor.staticauth.StaticTokenAuthenticationProvider.Config,kotlin.Unit]/PointingToDeclaration/ktor-static-authentication/dev.d1s.ktor.staticauth/static-token.html
 $dokka.location:dev.d1s.ktor.staticauth/StaticTokenAuthenticationProvider.Config///PointingToDeclaration/ktor-static-authentication/dev.d1s.ktor.staticauth/-static-token-authentication-provider/-config/index.html
 $dokka.location:dev.d1s.ktor.staticauth/StaticTokenAuthenticationProvider.Config/realm/#/PointingToDeclaration/ktor-static-authentication/dev.d1s.ktor.staticauth/-static-token-authentication-provider/-config/realm.html
