@@ -44,12 +44,12 @@ public class StaticTokenAuthenticationProvider(private val config: Config) : Aut
     }
 
     private fun AuthenticationContext.tryAuthenticateCall() = runCatching {
-        call.parseToken()?.let { parsedToken ->
-            if (parsedToken == config.requiredToken) {
-                setPrincipal()
-            } else {
-                error("Invalid token provided.")
-            }
+        val token = call.parseToken()
+
+        if (token != null && token == config.requiredToken) {
+            setPrincipal()
+        } else {
+            error("Invalid token provided.")
         }
     }
 
@@ -91,9 +91,10 @@ public class StaticTokenAuthenticationProvider(private val config: Config) : Aut
 
         public var realm: String = DEFAULT_STATIC_AUTHENTICATION_REALM
 
-        internal val requiredToken get() = requireNotNull(token) {
-            "Token is not set"
-        }
+        internal val requiredToken
+            get() = requireNotNull(token) {
+                "Token is not set"
+            }
 
         internal fun validate() {
             requiredToken
