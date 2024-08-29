@@ -77,9 +77,7 @@ public class StaticTokenAuthenticationProvider(private val config: Config) : Aut
     )
 
     private fun AuthenticationContext.setPrincipal() {
-        val principal = object : Principal {}
-
-        this.principal(principal)
+        this.principal(StaticAuthPrincipal)
     }
 
     /**
@@ -101,6 +99,11 @@ public class StaticTokenAuthenticationProvider(private val config: Config) : Aut
         }
     }
 }
+
+/***
+ * Principal for Static Auth
+ */
+public object StaticAuthPrincipal : Principal
 
 /***
  * Retrieves `static-auth.token` from [ApplicationConfig].
