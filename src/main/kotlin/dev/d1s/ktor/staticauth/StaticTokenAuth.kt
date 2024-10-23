@@ -103,7 +103,7 @@ public class StaticTokenAuthenticationProvider(private val config: Config) : Aut
 /***
  * Principal for Static Auth
  */
-public object StaticAuthPrincipal : Principal
+public object StaticAuthPrincipal
 
 /***
  * Retrieves `static-auth.token` from [ApplicationConfig].
